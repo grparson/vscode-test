@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_institutions
+    description: Cleaned institution metadata from FFIEC Call Report POR file
+    columns:
+      - name: idrssd
+        description: Federal Reserve RSSD ID
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_balance_sheet
+    description: Key balance sheet (Schedule RC) line items cast to numeric
+    columns:
+      - name: idrssd
+        description: Federal Reserve RSSD ID
+        tests:
+          - not_null
+
+  - name: stg_income_statement
+    description: Key income statement (Schedule RI) line items cast to numeric
+    columns:
+      - name: idrssd
+        description: Federal Reserve RSSD ID
+        tests:
+          - not_null

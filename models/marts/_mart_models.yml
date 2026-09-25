@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: fct_institution_financials
+    description: >
+      Joined institution profile with key balance sheet and income statement
+      metrics plus derived ratios (ROA, ROE, NIM, efficiency ratio).
+    columns:
+      - name: idrssd
+        description: Federal Reserve RSSD ID
+        tests:
+          - unique
+          - not_null
+      - name: institution_name
+        tests:
+          - not_null

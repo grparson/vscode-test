@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: raw
+    database: DBT
+    schema: RAW
+    tables:
+      - name: call_bulk_por
+        description: FFIEC Call Report institution metadata (POR = Point of Reference)
+        columns:
+          - name: IDRSSD
+            description: Federal Reserve RSSD ID - unique institution identifier
+            tests:
+              - not_null
+      - name: call_schedule_rc
+        description: FFIEC Call Report Schedule RC (Balance Sheet) with MDRM-coded columns
+        columns:
+          - name: IDRSSD
+            tests:
+              - not_null
+      - name: call_schedule_ri
+        description: FFIEC Call Report Schedule RI (Income Statement) with MDRM-coded columns
+        columns:
+          - name: IDRSSD
+            tests:
+              - not_null
