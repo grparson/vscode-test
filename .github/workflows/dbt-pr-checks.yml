@@ -1,0 +1,52 @@
+name: dbt PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  DBT_PROFILES_DIR: ${{ github.workspace }}
+
+jobs:
+  dbt-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dbt
+        run: pip install dbt-snowflake
+
+      - name: Write profiles.yml
+        run: |
+          cat > profiles.yml <<EOF
+          call_report_analytics:
+            target: ci
+            outputs:
+              ci:
+                type: snowflake
+                account: BTTJCZI-MEB03208
+                user: GPARSON44
+                private_key_path: /tmp/rsa_key.p8
+                authenticator: snowflake_jwt
+                role: ${{ vars.SNOWFLAKE_ROLE || 'ACCOUNTADMIN' }}
+                database: DBT
+                warehouse: ${{ vars.SNOWFLAKE_WAREHOUSE || 'COMPUTE_WH' }}
+                schema: TRANSFORMED
+                threads: 4
+          EOF
+
+      - name: Write private key
+        run: echo "${{ secrets.SNOWFLAKE_PRIVATE_KEY }}" > /tmp/rsa_key.p8
+
+      - name: dbt deps
+        run: dbt deps || true
+
+      - name: dbt compile
+        run: dbt compile
+
+      - name: dbt test (modified models)
+        run: dbt test
