@@ -16,6 +16,7 @@ models:
       - name: idrssd
         description: Federal Reserve RSSD ID
         tests:
+          - unique
           - not_null
 
   - name: stg_income_statement
